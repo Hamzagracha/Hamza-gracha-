@@ -52,7 +52,7 @@ FILTERS = [
 # ==============================
 def is_active_hours():
     now = datetime.datetime.now().hour
-    return 7 <= now < 15
+    return 00 <= now < 00
 
 # ==============================
 # دوال الفلاتر
