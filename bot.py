@@ -2,7 +2,7 @@ import telebot
 from telebot import types
 from PIL import Image, ImageEnhance, ImageFilter
 import io
-import datetime
+
 
 API_TOKEN = "8391245798:AAFePNKbTQ4tXdRoLGjGKPQPRthCbgd7ztU"
 CHANNEL_LINK = "https://t.me/H4x_Droid"
@@ -50,9 +50,7 @@ FILTERS = [
 # ==============================
 # التحقق من ساعات العمل
 # ==============================
-def is_active_hours():
-    now = datetime.datetime.now().hour
-    return 00 <= now < 00
+
 
 # ==============================
 # دوال الفلاتر
