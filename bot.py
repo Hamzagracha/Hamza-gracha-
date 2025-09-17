@@ -2,7 +2,7 @@ import telebot
 from telebot import types
 from PIL import Image, ImageEnhance, ImageFilter
 import io
-
+import datetime
 
 API_TOKEN = "8391245798:AAFePNKbTQ4tXdRoLGjGKPQPRthCbgd7ztU"
 CHANNEL_LINK = "https://t.me/H4x_Droid"
@@ -51,6 +51,17 @@ FILTERS = [
 # التحقق من ساعات العمل
 # ==============================
 
+# دالة تضمن أن البوت نشط دائماً (24 ساعة)
+def is_active_hours():
+    return True
+
+# مثال على استخدام الدالة في البوت
+@bot.message_handler(commands=['start'])
+def start_message(message):
+    if is_active_hours():
+        bot.send_message(message.chat.id, "مرحباً! البوت يعمل الآن ✅")
+    else:
+        bot.send_message(message.chat.id, "خارج ساعات العمل ⏰")
 
 # ==============================
 # دوال الفلاتر
