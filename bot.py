@@ -2,16 +2,15 @@ import telebot
 from telebot import types
 from PIL import Image, ImageEnhance, ImageFilter
 import io
+import datetime
 
-# ==============================
 API_TOKEN = "8391245798:AAFePNKbTQ4tXdRoLGjGKPQPRthCbgd7ztU"
 CHANNEL_LINK = "https://t.me/H4x_Droid"
 INSTAGRAM_LINK = "https://www.instagram.com/nxv_6"
-# ==============================
 
 bot = telebot.TeleBot(API_TOKEN)
 
-# نخزن الصورة الأصلية لكل مستخدم
+# تخزين الصورة الأصلية لكل مستخدم
 user_original_images = {}
 
 # قائمة 30 فلتر احترافي
@@ -49,9 +48,17 @@ FILTERS = [
 ]
 
 # ==============================
+# التحقق من ساعات العمل
+# ==============================
+def is_active_hours():
+    now = datetime.datetime.now().hour
+    return 7 <= now < 15
+
+# ==============================
 # دوال الفلاتر
 # ==============================
 def apply_filter(img, filter_name):
+    img = img.convert("RGB")  # لضمان عمل كل الفلاتر
     if filter_name == "iphone17":
         img = ImageEnhance.Color(img).enhance(1.8)
         img = ImageEnhance.Sharpness(img).enhance(2.0)
@@ -174,6 +181,10 @@ def apply_filter(img, filter_name):
 # ==============================
 @bot.message_handler(commands=['start'])
 def start_message(message):
+    if not is_active_hours():
+        bot.reply_to(message, "⏳ البوت يعمل فقط من 07:00 إلى 15:00")
+        return
+
     if message.chat.id not in user_original_images:
         bot.send_message(
             message.chat.id,
@@ -196,6 +207,10 @@ def start_message(message):
 
 @bot.message_handler(content_types=['photo'])
 def handle_photo(message):
+    if not is_active_hours():
+        bot.reply_to(message, "⏳ البوت يعمل فقط من 07:00 إلى 15:00")
+        return
+
     file_info = bot.get_file(message.photo[-1].file_id)
     file = bot.download_file(file_info.file_path)
 
@@ -209,12 +224,16 @@ def handle_photo(message):
 
 @bot.callback_query_handler(func=lambda call: call.data in [f[1] for f in FILTERS])
 def callback_filter(call):
+    if not is_active_hours():
+        bot.answer_callback_query(call.id, "⏳ البوت يعمل فقط من 07:00 إلى 15:00")
+        return
+
     if call.message.chat.id not in user_original_images or "original" not in user_original_images[call.message.chat.id]:
         bot.answer_callback_query(call.id, "⚠️ أرسل صورة أولاً")
         return
 
     img_bytes = io.BytesIO(user_original_images[call.message.chat.id]["original"])
-    img = Image.open(img_bytes)
+    img = Image.open(img_bytes).convert("RGB")
 
     img = apply_filter(img, call.data)
 
@@ -227,6 +246,9 @@ def callback_filter(call):
 
 @bot.message_handler(func=lambda m: True)
 def echo_all(message):
+    if not is_active_hours():
+        bot.reply_to(message, "⏳ البوت يعمل فقط من 07:00 إلى 15:00")
+        return
     bot.reply_to(message, "🤖 أرسل صورة لتجربة الفلاتر.")
 
 bot.polling()
