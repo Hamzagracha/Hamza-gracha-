@@ -50,18 +50,9 @@ FILTERS = [
 # ==============================
 # التحقق من ساعات العمل
 # ==============================
-
-# دالة تضمن أن البوت نشط دائماً (24 ساعة)
 def is_active_hours():
-    return True
-
-# مثال على استخدام الدالة في البوت
-@bot.message_handler(commands=['start'])
-def start_message(message):
-    if is_active_hours():
-        bot.send_message(message.chat.id, "مرحباً! البوت يعمل الآن ✅")
-    else:
-        bot.send_message(message.chat.id, "خارج ساعات العمل ⏰")
+    now = datetime.datetime.now().hour
+    return 7 <= now < 15
 
 # ==============================
 # دوال الفلاتر
