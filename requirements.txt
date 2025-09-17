@@ -1,2 +1,5 @@
-Flask==2.3.2
-gunicorn==21.2.0
+pyrogram==2.0.106
+tgcrypto
+Pillow
+opencv-python
+numpy
