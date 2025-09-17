@@ -4,4 +4,4 @@ Pillow
 opencv-python
 numpy
 pyTelegramBotAPI==4.14.0
-pytz==2025.7
+pytz
